@@ -1,9 +1,11 @@
 package com.juniperphoton.jetsco.fresco
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,10 +100,10 @@ fun FrescoImage(
             is ImageLoadState.Error -> {
                 onError?.invoke(this, imageState)
             }
-            is ImageLoadState.Loading -> {
+            is ImageLoadState.Loading,
+            is ImageLoadState.Empty -> {
                 onLoading?.invoke(this)
             }
-            is ImageLoadState.Empty -> Unit
         }
     }
 }
@@ -121,7 +123,7 @@ fun FrescoImage(
         transformRequestForSize = { r, _ ->
             r
         },
-        requestKey = request.hashCode(),
+        requestKey = request,
         onRequestCompleted = onRequestCompleted,
         modifier = modifier,
         content = content,

@@ -19,20 +19,12 @@
 
 package com.juniperphoton.jetsco.imageloading
 
-import android.util.Log
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
 import com.juniperphoton.jetsco.utils.JLog
-import java.lang.Error
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
@@ -78,12 +70,12 @@ fun <R : Any, TR : Any> ImageLoad(
         "loadState, key1 $requestKey, key2 $requestSize"
     }
 
-    val loadState by produceState<ImageLoadState>(
+    val loadState = produceState<ImageLoadState>(
         initialValue = ImageLoadState.Loading,
         key1 = requestKey,
         key2 = requestSize,
     ) {
-        value = requestSize?.let { updatedTransformRequestForSize(request, it) }
+        val internalState = requestSize?.let { updatedTransformRequestForSize(request, it) }
             ?.let { transformedRequest ->
                 try {
                     updatedExecuteRequest(transformedRequest)
@@ -101,8 +93,13 @@ fun <R : Any, TR : Any> ImageLoad(
                     // Anything else, we wrap in a Error state instance
                     ImageLoadState.Error(painter = null, throwable = t)
                 }.also(updatedOnRequestCompleted)
-            } ?: ImageLoadState.Loading
+            }
+        value = internalState ?: ImageLoadState.Loading
     }
+
+    // Set the state to loading on every recomposition.
+    // If we click the retry button, it should show loading state instead of the error state.
+    (loadState as? MutableState<ImageLoadState>)?.value = ImageLoadState.Loading
 
     BoxWithConstraints(
         modifier = modifier,
@@ -113,12 +110,12 @@ fun <R : Any, TR : Any> ImageLoad(
             height = if (constraints.hasBoundedHeight) constraints.maxHeight else -1
         )
         if (requestSize == null ||
-            (requestSize != size && shouldRefetchOnSizeChange(loadState, size))
+            (requestSize != size && shouldRefetchOnSizeChange(loadState.value, size))
         ) {
             requestSize = size
         }
 
-        content(loadState)
+        content(loadState.value)
     }
 }
 

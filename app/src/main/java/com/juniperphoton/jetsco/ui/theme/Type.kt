@@ -1,4 +1,4 @@
-package com.example.jetsco.ui.theme
+package com.juniperphoton.jetsco.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

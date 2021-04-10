@@ -1,4 +1,4 @@
-package com.example.jetsco
+package com.juniperphoton.jetsco
 
 import org.junit.Test
 

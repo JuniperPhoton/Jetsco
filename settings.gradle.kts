@@ -7,5 +7,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Jetsco"
+include(":jetsco")
 include(":app")
- 

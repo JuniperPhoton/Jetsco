@@ -60,6 +60,9 @@ dependencies {
 
     api("com.facebook.fresco:fresco:2.4.0")
     api("com.facebook.fresco:imagepipeline-okhttp3:2.4.0")
+    api("com.facebook.fresco:animated-gif:2.4.0")
+    api("com.facebook.fresco:animated-webp:2.4.0")
+    api("com.facebook.fresco:webpsupport:2.4.0")
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")

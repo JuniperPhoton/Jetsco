@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.facebook.imagepipeline.request.ImageRequest
-import com.juniperphoton.jetsco.fresco.DefaultLoading
 import com.juniperphoton.jetsco.fresco.FrescoImage
 import com.juniperphoton.jetsco.fresco.SimpleLoading
 import com.juniperphoton.jetsco.ui.theme.JetscoTheme
@@ -38,7 +36,8 @@ private val list = listOf(
     "https://pic4.zhimg.com/50/v2-ac8ff9b6f79ec97987f082b4a8a4b4c6_r.webp",
     "https://pic2.zhimg.com/v2-776b468a4cac3befb026aaff5ab5ea5f_720w.jpg",
     "https://pic4.zhimg.com/50/v2-b428a95239375a232e7a0fde0aa70f86_r.jpg",
-    "https://pic4.zhimg.com/v2-de1a46f298c9d23804208558007ef4b7_r.gif"
+    "https://pic4.zhimg.com/v2-de1a46f298c9d23804208558007ef4b7_r.gif",
+    "https://pic4.zhimg.com/v2-91f8ba95d9b49c78dc9eb4219186b4e3_b.gif"
 )
 
 @Composable
@@ -64,10 +63,8 @@ fun ImageList(images: List<String>) {
 
 @Composable
 fun Image(url: String) {
-    val request = ImageRequest.fromUri(url) ?: return
-
     FrescoImage(
-        request = request,
+        url = url,
         modifier = Modifier
             .height(300.dp)
             .fillMaxWidth(),

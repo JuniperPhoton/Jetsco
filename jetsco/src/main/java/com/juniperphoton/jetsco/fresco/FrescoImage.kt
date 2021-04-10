@@ -10,8 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.facebook.imagepipeline.request.ImageRequest
@@ -68,6 +66,33 @@ fun SimpleError(
 
 val DefaultLoading: (@Composable BoxScope.() -> Unit) = {
     SimpleLoading()
+}
+
+@Composable
+fun FrescoImage(
+    url: String,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+    fadeAnimation: Boolean = true,
+    alignment: Alignment = Alignment.Center,
+    contentScale: ContentScale = ContentScale.Crop,
+    onRequestCompleted: (ImageLoadState) -> Unit = EmptyRequestCompleteLambda,
+    onLoading: (@Composable BoxScope.() -> Unit)? = DefaultLoading,
+    onError: (@Composable BoxScope.(ImageLoadState.Error) -> Unit)? = null
+) {
+    val request = ImageRequest.fromUri(url) ?: return
+
+    FrescoImage(
+        request = request,
+        modifier = modifier,
+        onRequestCompleted = onRequestCompleted,
+        contentScale = contentScale,
+        alignment = alignment,
+        fadeAnimation = fadeAnimation,
+        onLoading = onLoading,
+        onError = onError,
+        contentDescription = contentDescription
+    )
 }
 
 @Composable
@@ -141,8 +166,8 @@ private suspend fun loadImage(request: ImageRequest): ImageLoadState {
             }
             else -> DataSource.NETWORK
         }
-        val bitmap = ImageIO.fetchBitmap(request)
-        ImageLoadState.Success(BitmapPainter(bitmap.asImageBitmap()), dataSource)
+        val drawable = ImageIO.fetchDrawable(request)
+        ImageLoadState.Success(drawable.toPainter(), dataSource)
     } catch (e: ImageIO.FetchException) {
         ImageLoadState.Error(throwable = e)
     }
